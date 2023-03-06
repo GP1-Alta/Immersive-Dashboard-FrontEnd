@@ -24,7 +24,7 @@ const App = () => {
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path={/Dashboard/${cookies.Email}} element={<Dashboard />} />
+        <Route path={`/Dashboard/${cookieEmail}`} element={<Dashboard />} />
       </Routes>
       </BrowserRouter>
     </>
