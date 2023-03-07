@@ -13,10 +13,10 @@ import { useCookies } from 'react-cookie';
 import { useLocation } from "react-router-dom";
 
 const App = () => {
-  const [cookies, setCookie] = useCookies<any>(['email']);
-  const [ cookieEmail, setCookieEmail ] = useState<any>('')
+  const [cookies, setCookie] = useCookies<any>(['username']);
+  const [ dataUser, setDataUser ] = useState<any>('')
   useEffect(() => {
-    setCookieEmail(cookies.Email)
+    setDataUser(cookies.username)
   },[])
 
   return (
@@ -24,7 +24,7 @@ const App = () => {
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path={`/Dashboard/${cookieEmail}`} element={<Dashboard />} />
+        <Route path={`/Dashboard/${dataUser}`} element={<Dashboard />} />
       </Routes>
       </BrowserRouter>
     </>
