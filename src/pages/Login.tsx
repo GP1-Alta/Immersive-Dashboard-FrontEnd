@@ -1,17 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../assets/logo-alta.png'
 import vectorLogin from '../assets/vector-login.png'
 import { CiMail } from 'react-icons/ci'
 import { TfiLock } from 'react-icons/tfi'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import Alert from '../components/Alert';
 
 const Login = () => {
+    const [alert, setAlert] = useState(false)
     const [isActive, setIsActive] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    let username = ''
+    const [idUser, setIdUser] = useState<any>([])
     const [cookies, setCookie] = useCookies()
     const navigate = useNavigate()
+
     const handleModal = () => {
         setIsActive(true)
     }
@@ -20,38 +26,64 @@ const Login = () => {
         setEmail(e)
         console.log(email)
     }
-    
+
     const handlePassword = (e: string) => {
         setPassword(e)
     }
 
-    const handleLogin = () => {
+    // alert arror login
+    function isAlert() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                setAlert(false)
+            }, 7000);
+        });
+    }
+
+    async function handleLogin() {
         if (email && password !== '') {
-            setCookie('Email', email, { path: "/" })
-            navigate(`/Dashboard/${email}`, {
-                state : {
-                    email : email
-                }
+            axios.post("https://virtserver.swaggerhub.com/KHARISMAJANUAR/api-immersive-dashboard/1.0.0/login", {
+                "email": "admin@alta.com",
+                "password": "admin"
             })
-            window.location.reload()
-        }else{
-            alert('error')
+                .then((response) => {
+                    const { name } = response.data.data;
+                    const { id } = response.data.data;
+                    username = name
+                    idUser.push(id)
+                    setCookie('username', username, { path: "/" })
+                    navigate(`/Dashboard/${username}`, {
+                        state: {
+                            userId: idUser
+                        }
+                    })
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setAlert(true)
+                    const result =  isAlert();
+                });
+        } else {
+            // jika username dan password kosong
+            setAlert(true)
+            const result = await isAlert();
         }
     }
 
-    if(cookies.Email){
-        navigate(`/Dashboard/${cookies.Email}`)
-    } 
-
-
-
-
+    // ketika username masih tersimpan di cookie ,user tidak perlu login kembali 
+    if (cookies.username) {
+        navigate(`/Dashboard/${cookies.username}`)
+    }
 
     return (
         <div >
             {screen.width >= 885
                 // dekstop 
                 ? <>
+                    <div className={`absolute top-0 z-50 w-full px-5 mt-5 duration-400 ${alert ? 'block' : 'hidden'}  `}>
+                        <Alert />
+                    </div>
                     <div className='w-full h-24 flex items-center px-5 '>
                         <img className='w-32 h-auto' src={logo} alt="" />
                     </div>
@@ -86,7 +118,7 @@ const Login = () => {
                                 <label className='cursor-pointer'>Forget password?</label>
                             </div>
                             <div>
-                                <button onClick={handleLogin} type='submit' className='w-24 h-10 bg-blue text-white rounded-lg'> Login</button>
+                                <button onClick={handleLogin} className='w-24 h-10 bg-blue text-white rounded-lg'> Login</button>
                             </div>
                         </div>
                     </div>
@@ -94,6 +126,9 @@ const Login = () => {
 
                 // mobile & ipad 
                 : <div className='bg-gray-100 duration-500'>
+                    <div className={`absolute top-0 z-50 w-full px-5 mt-5 duration-400 ${alert ? 'block' : 'hidden'}  `}>
+                        <Alert />
+                    </div>
                     <div className=' h-screen overflow-auto bg-gray-100 '>
                         <div className='flex items-center w-full h-16 bg-transparent px-5'>
                             <img className='w-auto h-12' src={logo} alt="" />
@@ -112,8 +147,8 @@ const Login = () => {
                         <h1 className='text-3xl font-semibold text-blue'>Login</h1>
                         <p className='text-center text-blue'>To keep conected with us please login with your personal information by email adress and password </p>
                         <form className='flex flex-col gap-4'>
-                            <input onChange={(e) => handleEmail(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="email" placeholder='Email' />
-                            <input onChange={(e) => handlePassword(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="password" placeholder='Password' />
+                            <input onChange={(e) => handleEmail(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="email" placeholder='Email' required />
+                            <input onChange={(e) => handlePassword(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="password" placeholder='Password' required />
                             <button onClick={handleLogin} className='w-58 h-8 bg-blue text-white rounded-full' >Login</button>
                         </form>
                         <p className='text-md font-semibold text-blue'>Forget Password?</p>
