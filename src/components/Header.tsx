@@ -3,7 +3,13 @@ import { useCookies } from 'react-cookie';
 
 import { GoThreeBars } from "react-icons/go";
 
-const Header = () => {
+interface myPrps {
+  pageName: string
+  openSideBar: React.MouseEventHandler
+}
+
+const Header: FC<myPrps> = ({pageName, openSideBar}) => {
+
   const [cookies, setCookie] = useCookies<any>(['username']);
   const [ username, setUsername ] = useState<any>('')
   useEffect(() => {
@@ -11,15 +17,11 @@ const Header = () => {
   },[])
 
   return (
-    <div>
-      <div className="flex justify-between items-center w-full h-[60px] bg-[#F5F5F5] text-xl px-5">
-        <a href="">
-          <GoThreeBars />
-        </a>
-        <h1 className="">Dashboard</h1>
-        <p className="">Hello, {username}</p>
+      <div className={` flex justify-between items-center w-full h-[60px] bg-[#F5F5F5] text-xl px-5  `}>
+        {screen.width < 885 ? <GoThreeBars onClick={openSideBar} /> : ''}
+        <h1 className="text-center">{pageName}</h1>
+        <p className="text-right">Hello, {username}</p>
       </div>
-    </div>
   );
 };
 
