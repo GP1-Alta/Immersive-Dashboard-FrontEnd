@@ -8,24 +8,27 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const MenteeList = () => {
-  const [tabelOpen, setTabelOpen] = useState(false)
+  const [tabelOpen, setTabelOpen] = useState(false);
 
   const handleTable = () => {
-    setTabelOpen(!tabelOpen)
-  }
+    setTabelOpen(!tabelOpen);
+  };
 
   return (
     <div>
-      {screen.width > 767 ?
+      {screen.width > 767 ? (
         <Layout>
           <div className="flex items-center justify-end mr-5 mt-20 gap-5">
             <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
             <a>
               <BsSearch size={28} />
             </a>
-            <button className="btn bg-[#19345E]">Add New</button>
+            <Link to={"/AddMentee"} className="btn bg-[#19345E]">
+              Add New
+            </Link>
           </div>
           <div className="flex gap-3 justify-end mr-5 mt-5">
             <button className="btn bg-[#19345E]">Export</button>
@@ -149,7 +152,8 @@ const MenteeList = () => {
             </button>
           </div>
         </Layout>
-        : <Layout >
+      ) : (
+        <Layout>
           <div className="px-3">
             <div className="flex items-center mr-5 mt-12 gap-5">
               <button className="w-24 h-8 text-white text-sm rounded-md bg-orange">Add New</button>
@@ -192,7 +196,7 @@ const MenteeList = () => {
               </select>
             </div>
             <div className="mt-8">
-              <table className={`${tabelOpen ? 'h-fit' : 'h-12'} w-full duration-300 relative overflow-hidden border-t border-black py-2 flex flex-col gap-3 `}>
+              <table className={`${tabelOpen ? "h-fit" : "h-12"} w-full duration-300 relative overflow-hidden border-t border-black py-2 flex flex-col gap-3 `}>
                 <IoIosArrowDropdownCircle onClick={handleTable} className="absolute ml-4 text-2xl text-orange" />
                 <tr className="w-full pl-16">
                   <td className="w-80 text-start  ">Name</td>
@@ -216,7 +220,9 @@ const MenteeList = () => {
                 </tr>
                 <tr className="w-full pl-16">
                   <td className="w-80 text-start  ">Detail</td>
-                  <td className="w-1/2 text-lg text-blue"><BsFillJournalBookmarkFill /></td>
+                  <td className="w-1/2 text-lg text-blue">
+                    <BsFillJournalBookmarkFill />
+                  </td>
                 </tr>
                 <div className="flex justify-end px-5 text-lg gap-4">
                   <FiEdit className="text-green-800" /> <MdDeleteForever className="text-red-500" />
@@ -225,7 +231,7 @@ const MenteeList = () => {
             </div>
           </div>
         </Layout>
-      }
+      )}
     </div>
   );
 };

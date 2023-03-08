@@ -4,66 +4,64 @@ import SideBar from "./SideBar";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
-
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [cookies, setCookie, removeCookie ] = useCookies(['username', 'id'])
-  const [isActive, setIsActive ] = useState(false)
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [cookies, setCookie, removeCookie] = useCookies(["username", "id"]);
+  const [isActive, setIsActive] = useState(false);
 
   const handledashboard = () => {
     navigate(`/Dashboard/${cookies.username}`, {
-      state : {
-        name: 'Dashboard'
-      }
-    })
-  }
+      state: {
+        name: "Dashboard",
+      },
+    });
+  };
   const handleMentee = () => {
-    navigate(`/Menteelist/${cookies.username}`,{
+    navigate(`/Menteelist/${cookies.username}`, {
       state: {
-        name : 'Mentee List'
-      }
-    })
-  }
+        name: "Mentee List",
+      },
+    });
+  };
   const handleUser = () => {
-    navigate(`/Userlist/${cookies.username}`,{
+    navigate(`/Userlist/${cookies.username}`, {
       state: {
-        name : 'User List'
-      }
-    })
-  }
+        name: "User List",
+      },
+    });
+  };
   const handleClass = () => {
-    navigate(`/Classlist/${cookies.username}`,{
+    navigate(`/Classlist/${cookies.username}`, {
       state: {
-        name : 'Class List'
-      }
-    })
-  }
+        name: "Class List",
+      },
+    });
+  };
 
   const handleLogout = () => {
     removeCookie("username", { path: "/" });
     removeCookie("id", { path: "/" });
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   const openSideBar = () => {
-    setIsActive(true)
-  }
-  
+    setIsActive(true);
+  };
+
   const closeSideBar = () => {
-    setIsActive(false)
-  }
+    setIsActive(false);
+  };
 
   return (
     <>
       <div className="flex">
         <div>
-          <SideBar 
+          <SideBar
             handledashboard={() => handledashboard()}
             handleMentee={() => handleMentee()}
             handleUser={() => handleUser()}
@@ -73,11 +71,8 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             isActive={isActive}
           />
         </div>
-        <div className="w-full">
-          <Header
-            pageName={location?.state?.name ? location?.state?.name : 'Dashboard'}
-            openSideBar={() => openSideBar()}
-          />
+        <div className="ml-[200px] w-full">
+          <Header pageName={location?.state?.name ? location?.state?.name : "Dashboard"} openSideBar={() => openSideBar()} />
           {children}
         </div>
       </div>
