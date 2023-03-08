@@ -21,8 +21,8 @@ const Dashboard = () => {
     <div>
       <Layout>
         <div className="flex gap-5 justify-center my-5">
-          {data.map((data) => (
-            <InfoBox title={data.title} number={data.number} />
+          {data.map((data:any, index:any) => (
+            <InfoBox key={index} title={data.title} number={data.number} />
           ))}
         </div>
       </Layout>

@@ -24,11 +24,12 @@ const Login = () => {
 
     const handleEmail = (e: string) => {
         setEmail(e)
-        console.log(email)
+        // console.log(email)
     }
 
     const handlePassword = (e: string) => {
         setPassword(e)
+        // console.log(password)
     }
 
     // alert arror login
@@ -40,18 +41,20 @@ const Login = () => {
         });
     }
 
-    async function handleLogin() {
+    async function handleLogin(e:any) {
         if (email && password !== '') {
-            axios.post("https://virtserver.swaggerhub.com/KHARISMAJANUAR/api-immersive-dashboard/1.0.0/login", {
-                "email": "admin@alta.com",
-                "password": "admin"
+            axios.post("http://34.123.29.56:8000/login", {
+                "email": `${email}`,
+                "password": `${password}`
             })
                 .then((response) => {
                     const { name } = response.data.data;
                     const { id } = response.data.data;
                     username = name
                     idUser.push(id)
+                    console.log(id)
                     setCookie('username', username, { path: "/" })
+                    setCookie('id', idUser, { path: "/" })
                     navigate(`/Dashboard/${username}`, {
                         state: {
                             userId: idUser
@@ -62,7 +65,7 @@ const Login = () => {
                 .catch((error) => {
                     console.log(error);
                     setAlert(true)
-                    const result =  isAlert();
+                    const result = isAlert();
                 });
         } else {
             // jika username dan password kosong
@@ -149,7 +152,7 @@ const Login = () => {
                         <form className='flex flex-col gap-4'>
                             <input onChange={(e) => handleEmail(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="email" placeholder='Email' required />
                             <input onChange={(e) => handlePassword(e.target.value)} className='p-2 px-5 outline-none bg-gray-100 rounded-full' type="password" placeholder='Password' required />
-                            <button onClick={handleLogin} className='w-58 h-8 bg-blue text-white rounded-full' >Login</button>
+                            <button onClick={(e) => handleLogin(e.preventDefault())} className='w-58 h-8 bg-blue text-white rounded-full' >Login</button>
                         </form>
                         <p className='text-md font-semibold text-blue'>Forget Password?</p>
                         <p className='text-blue'>Dont have an account? <span className='text-orange'>Register</span></p>
