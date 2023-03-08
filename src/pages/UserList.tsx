@@ -42,7 +42,9 @@ const UserList = () => {
   console.log(dataUser)
 
   const deleteUser = () => {
-    
+    axios.delete('http://34.123.29.56:8000/users',{
+      
+    })
   }
 
   return (
