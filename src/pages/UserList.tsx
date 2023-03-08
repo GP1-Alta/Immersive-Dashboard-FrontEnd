@@ -25,7 +25,7 @@ const UserList = () => {
   const token = cookies.token;
 
   useEffect(() => {
-    axios.get('http://34.123.29.56:8000/users', {
+    axios.get('http://34.123.29.56/users', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -41,10 +41,14 @@ const UserList = () => {
   }, [])
   console.log(dataUser)
 
-  const deleteUser = () => {
-    axios.delete('http://34.123.29.56:8000/users',{
-      
+  const deleteUser = (id: number) => {
+    console.log(id)
+    axios.delete(`http://34.123.29.56/users/5`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     })
+      .then(response => console.log(response.data))
   }
 
   return (
@@ -82,8 +86,8 @@ const UserList = () => {
                 {/* row 1 */}
                 {dataUser.map((item: any, index: number) => {
                   return (
-                    <tr>
-                      <th>{index}</th>
+                    <tr key={index}>
+                      <th>{item.id}</th>
                       <td>{item.name}</td>
                       <td>{item.email}</td>
                       <td>{item.team}</td>
@@ -94,7 +98,7 @@ const UserList = () => {
                           <span >
                             <AiFillEdit size={25} className='text-green-600' />
                           </span>
-                          <span onClick={deleteUser} >
+                          <span onClick={() => deleteUser(item.id)} >
                             <AiFillDelete size={25} className='text-red-600' />
                           </span>
                         </td>
