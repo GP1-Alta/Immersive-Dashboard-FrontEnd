@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BsBookFill, BsSearch } from "react-icons/bs";
 import { GrNext, GrPrevious } from "react-icons/gr";
@@ -7,10 +7,10 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
+import axios from "axios";
 
 import { useLocation } from "react-router-dom";
 import { Cookies, useCookies } from "react-cookie";
-import axios from "axios";
 
 const UserList = () => {
   const [tabelOpen, setTabelOpen] = useState(false)

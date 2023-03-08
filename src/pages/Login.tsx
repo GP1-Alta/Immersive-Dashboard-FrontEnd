@@ -13,7 +13,6 @@ const Login = () => {
     const [isActive, setIsActive] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    // const [token, setToken] = useState('')
     let username = ''
     const [idUser, setIdUser] = useState<any>([])
     const [cookies, setCookie] = useCookies()
@@ -51,18 +50,17 @@ const Login = () => {
                 .then((response) => {
                     const { name } = response.data.data;
                     const { id } = response.data.data;
-                    const token = response.data.token
                     username = name
                     idUser.push(id)
+                    console.log(id)
                     setCookie('username', username, { path: "/" })
                     setCookie('id', idUser, { path: "/" })
-                    setCookie('token', token, { path: "/" })
                     navigate(`/Dashboard/${username}`, {
                         state: {
                             userId: idUser
                         }
                     })
-                    // window.location.reload()
+                    window.location.reload()
                 })
                 .catch((error) => {
                     console.log(error);
