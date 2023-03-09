@@ -136,10 +136,6 @@ const UserList = () => {
         setNewStatus(res.data.data.status)
 
       })
-      .then((response) => {
-        console.log(response.data);
-        alert(`success delete user id ${id}`);
-      });
   };
 
 
