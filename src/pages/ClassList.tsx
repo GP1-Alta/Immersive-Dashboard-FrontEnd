@@ -96,7 +96,13 @@ const ClassList = () => {
   }, []);
 
   const deleteClass = (id: any) => {
-    axios.delete(`https://altaimmersive.site/classes/${id}`, {});
+    axios
+      .delete(`https://altaimmersive.site/classes/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => console.log(response.data));
   };
 
   return (

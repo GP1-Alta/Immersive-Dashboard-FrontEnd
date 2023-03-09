@@ -9,14 +9,20 @@ import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import axios from "axios";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Cookies, useCookies } from "react-cookie";
 
 const UserList = () => {
+  const navigate = useNavigate();
   const [tabelOpen, setTabelOpen] = useState(false);
   const location = useLocation();
-  const [cookies, setCookie] = useCookies<any>(["id", "token"]);
+  const [cookies, setCookie] = useCookies<any>(["id", "token", "username"]);
   const [dataUser, setDataUser] = useState([]);
+  const [dataAdmin, setDataAdmin] = useState<any>("");
+
+  useEffect(() => {
+    setDataAdmin(cookies.username);
+  }, []);
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
@@ -51,6 +57,10 @@ const UserList = () => {
         },
       })
       .then((response) => console.log(response.data));
+  };
+
+  const editUser = (id: number) => {
+    navigate(`/MenteeLog/${dataAdmin}/${id}`);
   };
 
   return (
@@ -97,7 +107,7 @@ const UserList = () => {
                       <td>{item.status}</td>
                       {cookies.id == 1 ? (
                         <td className="flex gap-6">
-                          <span>
+                          <span onClick={() => editUser(item.id)}>
                             <AiFillEdit size={25} className="text-green-600" />
                           </span>
                           <span onClick={() => deleteUser(item.id)}>
