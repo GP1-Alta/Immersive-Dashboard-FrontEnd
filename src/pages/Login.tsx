@@ -45,12 +45,13 @@ const Login = () => {
     if (email && password !== "") {
       axios
         .post("http://34.123.29.56/login", {
-          "email": `${email}`,
-          "password": `${password}`,
+          email: `${email}`,
+          password: `${password}`,
         })
         .then((response) => {
           const { name } = response.data.data;
           const { id } = response.data.data;
+          console.log(response.data.token);
           const token = response.data.token;
           username = name;
           idUser.push(id);
@@ -63,7 +64,7 @@ const Login = () => {
               userId: idUser,
             },
           });
-          window.location.reload();
+          // window.location.reload()
         })
         .catch((error) => {
           console.log(error);
