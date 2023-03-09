@@ -32,6 +32,9 @@ const ClassList = () => {
     setTabelOpen(!tabelOpen);
   };
 
+  const addStart = () => {
+
+  } 
 
   const token = cookies.token;
 
@@ -194,7 +197,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input onChange={(e) => addName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -223,7 +226,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input onChange={(e) => addStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => setStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -233,7 +236,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input onChange={(e) => addEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => setEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                 </table>
