@@ -89,7 +89,6 @@ const MenteeList = () => {
 
   // update mentee
   const updateMentee = (id: any) => {
-    console.log(id)
     navigate('/AddMentee', {
       state: {
         id: id
@@ -111,7 +110,6 @@ const MenteeList = () => {
             </Link>
           </div>
           <div className="flex gap-3 justify-end mr-5 mt-5">
-
             {/* filter bt class */}
             <select value={classes} onChange={(e) => setClasses(e.target.value)}>
               <option value='' selected>
