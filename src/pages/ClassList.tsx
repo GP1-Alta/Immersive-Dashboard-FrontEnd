@@ -20,121 +20,115 @@ const ClassList = () => {
   const [dataMentor, setDataMentor] = useState<MentorType[]>([]);
   const [id, setId] = useState<number>();
   const [name, setName] = useState<string>("");
-  const [mentor, setMentor] = useState<string>("");
+  const [mentor, setMentor] = useState<any>();
+  const idMentor = parseInt(mentor)
   const [start, setStart] = useState<string>("");
   const [end, setEnd] = useState<string>("");
+  const [search, setSearch] = useState('')
+  const [idClass, setIdClass] = useState()
+  const [page, setPage] = useState(1)
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
   };
 
-  // handle input add user
-  const addName = (e: any) => {
-    setName(e);
-    console.log(name);
-  };
-
-  const addMentor = (e: any) => {
-    setMentor(e);
-    console.log(mentor);
-  };
-
-  const addStart = (e: any) => {
-    setStart(e);
-    console.log(start);
-  };
-
-  const addEnd = (e: any) => {
-    setEnd(e);
-    console.log(end);
-  };
 
   const token = cookies.token;
 
-  function fetchData() {
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+  };
+
+  // add new class
+  const addNewClass = () => {
     axios
-      .get("https://altaimmersive.site/classes", {
+      .post("https://altaimmersive.site/classes", {
+        "name": `${name}`,
+        "user_id": idMentor,
+        "start_date": `${start}`,
+        "end_date": `${end}`
+      }, { headers }
+      )
+      .then((res) => {
+        res
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // update class
+  const updateClass = (id: any) => {
+    axios.get(`https://altaimmersive.site/classes/${id}`, { headers })
+      .then((res) => {
+        setIdClass(res.data.data.id)
+        setName(res.data.data.name)
+        setMentor(res.data.data.user_id)
+        setStart(res.data.data.start_date)
+        setEnd(res.data.data.end_date)
+      })
+  }
+
+  const saveUpdate = () => {
+    axios.put(`https://altaimmersive.site/classes/${idClass}`, {
+      "name": `${name}`,
+      "user_id": idMentor,
+      "start_date": `${start}`,
+      "end_date": `${end}`
+    }, { headers })
+      .then((res) => res)
+  }
+
+  // get all class
+  useEffect(() => {
+    axios
+      .get(`https://altaimmersive.site/classes?name=${search}&page=${page}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         setDataClass(response.data.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  }, [search, addNewClass])
 
-  function getMentor() {
-    axios
-      .get("https://altaimmersive.site/mentors", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        const { name } = response.data.data;
-        setDataMentor(response.data.data);
-        console.log(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  const addNewClass = () => {
-    axios
-      .post("https://altaimmersive.site/classes", {
-        name: `${name}`,
-        mentor: `${mentor}`,
-        start_date: `${start}`,
-        end_date: `${end}`,
-      })
-      .then((res) => {
-        console.log(res.data);
-        axios
-          .get("https://altaimmersive.site/mentors", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            const { name } = response.data.data;
-            setDataMentor(response.data.data);
-            console.log(response.data.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
-  };
-
+  // get mentor
   useEffect(() => {
-    getMentor();
-  }, []);
+    axios.get('https://altaimmersive.site/mentors', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => setDataMentor(res.data.data))
+      .catch((err) => err)
+  }, [])
 
-  useEffect(() => {
-    fetchData();
-  }, []);
 
+  // delete class
   const deleteClass = (id: any) => {
-    axios
-      .delete(`https://altaimmersive.site/classes/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => console.log(response.data));
+
+    axios.delete(`https://altaimmersive.site/classes/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).then((res) => console.log(res))
+      .catch((err) => err)
   };
+
+  const cleerData = () => {
+    setName('')
+    setMentor('')
+    setStart('')
+    setEnd('')
+  }
 
   return (
     <div>
       {screen.width > 767 ? (
         <Layout>
           <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
+            <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-xs" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -157,7 +151,7 @@ const ClassList = () => {
               </thead>
               <tbody>
                 {/* row 1 */}
-                {dataClass.map((data, index) => {
+                {dataClass?.map((data, index) => {
                   return (
                     <tr key={index}>
                       <th>{index}</th>
@@ -166,10 +160,10 @@ const ClassList = () => {
                       <td>{data.start_date}</td>
                       <td>{data.end_date}</td>
                       <td className="flex gap-3">
-                        <a href="">
+                        <label htmlFor="my-modal-4" onClick={(id) => updateClass(data.id)}>
                           <AiFillEdit size={25} />
-                        </a>
-                        <div onClick={() => deleteClass(data.id)}>
+                        </label>
+                        <div onClick={(id) => deleteClass(data.id)}>
                           <AiFillDelete size={25} />
                         </div>
                       </td>
@@ -180,10 +174,10 @@ const ClassList = () => {
             </table>
           </div>
           <div className="flex gap-10 justify-end mr-5">
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={page > 1 ? () => setPage(page - 1) : () => page} className="btn bg-[#19345E] flex gap-2">
               <GrPrevious /> Prev
             </button>
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={() => setPage(page + 1)} className="btn bg-[#19345E] flex gap-2">
               Next <GrNext />
             </button>
           </div>
@@ -210,10 +204,11 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <select value={mentor} onChange={addMentor} className="mb-3 select select-bordered w-full max-w-xs">
-                        {dataMentor.map((data, index) => {
+
+                      <select value={mentor} onChange={(e) => setMentor(e.target.value)} className="mb-3 select select-bordered w-full max-w-xs">
+                        {dataMentor?.map((data, index) => {
                           return (
-                            <option key={index} value={data.name}>
+                            <option key={index} value={data.id}>
                               {data.name}
                             </option>
                           );
@@ -244,12 +239,18 @@ const ClassList = () => {
                 </table>
                 <div className="grid justify-items-center w-full">
                   <div className="flex w-full gap-5 justify-end">
-                    <label htmlFor="my-modal-4" className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">
+                    <label onClick={cleerData} htmlFor="my-modal-4" className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">
                       Cancel
                     </label>
-                    <label htmlFor="my-modal-4" onClick={addNewClass} className="btn bg-[#19345E] w-20 flex gap-2">
-                      Save
-                    </label>
+                    {idClass ?
+                      <label htmlFor="my-modal-4" onClick={saveUpdate} className="btn bg-[#19345E] w-20 flex gap-2">
+                        Save
+                      </label>
+                      : <label htmlFor="my-modal-4" onClick={addNewClass} className="btn bg-[#19345E] w-20 flex gap-2">
+                        Save
+                      </label>
+
+                    }
                   </div>
                 </div>
               </form>
