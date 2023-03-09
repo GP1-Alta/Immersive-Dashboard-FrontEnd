@@ -17,38 +17,122 @@ const UserList = () => {
   const location = useLocation()
   const [cookies, setCookie] = useCookies<any>(['id', 'token'])
   const [dataUser, setDataUser] = useState([])
+  const [search, setSearch] = useState([])
+  const [page, setPage] = useState<any>(1)
+  // let page = 1
+
+  // data add user
+  const [newName, setNewName] = useState()
+  const [newEmail, setNewEmail] = useState()
+  const [newPassword, setNewPassword] = useState()
+  const [newTeam, setNewTeam] = useState()
+  const [newRole, setNewRole] = useState()
+  const [newStatus, setNewStatus] = useState()
+
+  // handle input add user
+  const addName = (e: any) => {
+    setNewName(e)
+    console.log(newName)
+  }
+  const addEmail = (e: any) => {
+    setNewEmail(e)
+    console.log(newEmail)
+  }
+  const addPassword = (e: any) => {
+    setNewPassword(e)
+    console.log(newPassword)
+  }
+  const addTeam = (e: any) => {
+    setNewTeam(e.target.value)
+    console.log(newTeam)
+  }
+  const addRole = (e: any) => {
+    setNewRole(e.target.value)
+    console.log(newRole)
+  }
+  const addStatus = (e: any) => {
+    setNewStatus(e.target.value)
+    console.log(newStatus)
+  }
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen)
   }
 
-  const token = cookies.token;
+  // add new user
+  const addNewUser = () => {
+    axios.post('http://34.123.29.56/register', {
+      "name": `${newName}`,
+      "email": `${newEmail}`,
+      "password": `${newPassword}`,
+      "team": `${newTeam}`,
+      "status": `${newStatus}`
+    })
+      .then((res) => {
+        console.log(res.data)
+        axios.get(`http://34.123.29.56/users?page=${page}&key=${search}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+          .then(response => {
+            setDataUser(response.data.data)
+            console.log(response.data);
+          })
+          .catch(error => {
+            // Handle error
+            console.error(error);
+          });
+      })
+  }
 
+
+  const token = cookies.token;
+  // get all user
   useEffect(() => {
-    axios.get('http://34.123.29.56/users', {
+    axios.get(`http://34.123.29.56/users?page=${page}&key=${search}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then(response => {
         setDataUser(response.data.data)
-        // console.log(response.data);
+        console.log(response.data);
       })
       .catch(error => {
         // Handle error
         console.error(error);
       });
-  }, [])
-  console.log(dataUser)
+  }, [page, search])
 
+  // get user by search 
+  const handleSearch = (e: any) => {
+    setSearch(e)
+  }
+
+  // delete user
   const deleteUser = (id: number) => {
     console.log(id)
-    axios.delete(`http://34.123.29.56/users/5`, {
+    axios.delete(`https://virtserver.swaggerhub.com/KHARISMAJANUAR/api-immersive-dashboard/1.0.0/users/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
-      .then(response => console.log(response.data))
+      .then(response => {
+        console.log(response.data)
+        alert(`success delete user id ${id}`)
+      })
+  }
+
+  const prevPage = () => {
+    if (page > 1) {
+      setPage(page - 1)
+    }
+  }
+
+  const nextPage = () => {
+    setPage(page + 1)
+
   }
 
   return (
@@ -56,7 +140,7 @@ const UserList = () => {
       {screen.width > 767 ? (
         <Layout>
           <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
+            <input type="text" onChange={(e) => handleSearch(e.target.value)} placeholder="Type here" className="input w-full max-w-xs" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -110,15 +194,16 @@ const UserList = () => {
             </table>
           </div>
           <div className="flex gap-10 justify-end mr-5">
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={prevPage} className="btn bg-[#19345E] flex gap-2">
               <GrPrevious /> Prev
             </button>
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={nextPage} className="btn bg-[#19345E] flex gap-2">
               Next <GrNext />
             </button>
           </div>
           <input type="checkbox" id="my-modal-4" className="modal-toggle" />
           <label htmlFor="my-modal-4" className="modal cursor-pointer">
+            {/* modal add user */}
             <label className="modal-box relative w-screen" htmlFor="">
               <h3 className="text-lg font-bold text-center mb-5">Add User</h3>
               <table className="w-full">
@@ -129,7 +214,7 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <input type="text" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                    <input onChange={(e) => addName(e.target.value)} type="text" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                   </td>
                 </tr>
                 <tr>
@@ -139,7 +224,7 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <input type="email" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                    <input onChange={(e) => addEmail(e.target.value)} type="email" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                   </td>
                 </tr>
                 <tr>
@@ -149,7 +234,7 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <input type="password" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                    <input onChange={(e) => addPassword(e.target.value)} type="password" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                   </td>
                 </tr>
                 <tr>
@@ -159,12 +244,15 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <select className="mb-3 select select-bordered w-full max-w-xs">
+                    <select value={newTeam} onChange={addTeam} className="mb-3 select select-bordered w-full max-w-xs">
                       <option disabled selected>
-                        Who shot first?
+                      Academic
                       </option>
-                      <option>Han Solo</option>
-                      <option>Greedo</option>
+                      <option value="Academic">Academic</option>
+                      <option value="People">Mentor</option>
+                      <option value="People">People Skill</option>
+                      <option value="Placement">Placement</option>
+                      <option value="Admission">Admission</option>
                     </select>
                   </td>
                 </tr>
@@ -175,12 +263,10 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <select className="mb-3 select select-bordered w-full max-w-xs">
-                      <option disabled selected>
-                        Who shot first?
+                    <select value={newRole} onChange={addRole} className="mb-3 select select-bordered w-full max-w-xs">
+                      <option selected>
+                        Default
                       </option>
-                      <option>Han Solo</option>
-                      <option>Greedo</option>
                     </select>
                   </td>
                 </tr>
@@ -191,17 +277,21 @@ const UserList = () => {
                     </label>
                   </td>
                   <td>
-                    <select className="mb-3 select select-bordered w-full max-w-xs">
-                      <option selected>Active</option>
-                      <option>Non-Active</option>
+                    <select value={newStatus} onChange={addStatus} className="mb-3 select select-bordered w-full max-w-xs">
+                      <option disabled selected>
+                        Active
+                      </option>
+                      <option value="Active">Active</option>
+                      <option value="Not-Active">Not-Active</option>
+                      <option value="Deleted">Deleted</option>
                     </select>
                   </td>
                 </tr>
               </table>
               <div className="grid justify-items-center w-full">
                 <div className="flex w-full gap-5 justify-end">
-                  <button className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">Cancel</button>
-                  <button className="btn bg-[#19345E] w-20 flex gap-2">Save</button>
+                  <label htmlFor="my-modal-4" className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">Cancel</label>
+                  <label htmlFor="my-modal-4" onClick={addNewUser} className="btn bg-[#19345E] w-20 flex gap-2">Save</label>
                 </div>
               </div>
             </label>
@@ -222,7 +312,7 @@ const UserList = () => {
               <IoIosArrowDropdownCircle onClick={handleTable} className="absolute ml-4 text-2xl text-orange" />
               <tr className="w-full pl-16">
                 <td className="w-80 text-start  ">Fullname</td>
-                <td className="w-1/2">arbi kustia</td>
+                <td className="w-1/2"></td>
               </tr>
               <tr className="w-full pl-16">
                 <td className="w-80 text-start  ">Email</td>

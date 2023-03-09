@@ -63,7 +63,7 @@ const Login = () => {
                             userId: idUser
                         }
                     })
-                    // window.location.reload()
+                    window.location.reload()
                 })
                 .catch((error) => {
                     console.log(error);
