@@ -12,70 +12,73 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Cookies, useCookies } from "react-cookie";
 
-
 const MenteeList = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [tabelOpen, setTabelOpen] = useState(false);
-  const [cookies, setCookie] = useCookies<any>(['id', 'token'])
-  const [mentees, setMentees] = useState([])
-  const [classList, setClassList] = useState<any>([])
-  const [search, setSearch] = useState<any>([])
-  const [category, setCategory] = useState<any>([])
-  const [page, setPage] = useState<any>(1)
+  const [cookies, setCookie] = useCookies<any>(["id", "token", "username"]);
+  const [mentees, setMentees] = useState([]);
+  const [classList, setClassList] = useState<any>([]);
+  const [search, setSearch] = useState<any>([]);
+  const [category, setCategory] = useState<any>([]);
+  const [page, setPage] = useState<any>(1);
+  const [dataUser, setDataUser] = useState<any>("");
+
+  useEffect(() => {
+    setDataUser(cookies.username);
+  }, []);
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
   };
 
   const handleSearch = (e: any) => {
-    setSearch(e)
-  }
+    setSearch(e);
+  };
 
-  const arr: any = []
-  // get all class 
+  const arr: any = [];
+  // get all class
   useEffect(() => {
-    axios.get('https://altaimmersive.site/classes/list', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then((res) => {
-        setClassList(res.data.data)
+    axios
+      .get("https://altaimmersive.site/classes/list", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .catch((err) => console.log(err))
-  }, [])
+      .then((res) => {
+        setClassList(res.data.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-  console.log(classList)
+  console.log(classList);
   const token = cookies.token;
-  // get all mentees 
+  // get all mentees
   useEffect(() => {
-    axios.get(`https://altaimmersive.site/mentees?name=${search}&page=${page}&category=${category}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    axios
+      .get(`https://altaimmersive.site/mentees?name=${search}&page=${page}&category=${category}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((ress) => {
         // console.log('mentee', ress.data.data)
-        setMentees(ress.data.data)
-
-      })
-  }, [search, category, page])
+        setMentees(ress.data.data);
+      });
+  }, [search, category, page]);
 
   // update mentee
   const updateMentee = (e: any) => {
-    console.log(e)
-    navigate('/AddMentee', {
+    console.log(e);
+    navigate("/AddMentee", {
       state: {
-        id: e
-      }
-    })
+        id: e,
+      },
+    });
+  };
 
-  }
-
-
-
-
-
+  const detailMentee = (id: number) => {
+    navigate(`/MenteeLog/${dataUser}/${id}`);
+  };
 
   return (
     <div>
@@ -101,12 +104,10 @@ const MenteeList = () => {
                 //   <option>{item?.name}</option>
                 // </select>
                 return (
-
-                  <option key={item.id} value='All Class'>
+                  <option key={item.id} value="All Class">
                     {item.name}
                   </option>
-
-                )
+                );
               })}
             </select>
 
@@ -124,8 +125,8 @@ const MenteeList = () => {
               <option disabled selected>
                 All Category
               </option>
-              <option value='Informatics'>Informatics</option>
-              <option value='Non-Informatics'>Non-Informatics</option>
+              <option value="Informatics">Informatics</option>
+              <option value="Non-Informatics">Non-Informatics</option>
             </select>
             <button className="btn bg-[#19345E]">Filter</button>
           </div>
@@ -156,7 +157,7 @@ const MenteeList = () => {
                       <td>{item.category}</td>
                       <td>{item.sex}</td>
                       <td>
-                        <BsBookFill />
+                        <BsBookFill size={25} onClick={() => detailMentee(item.id)} />
                       </td>
                       <td className="flex gap-3">
                         <span className="text-green-600">
@@ -167,7 +168,7 @@ const MenteeList = () => {
                         </a>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>

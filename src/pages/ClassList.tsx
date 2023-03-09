@@ -28,13 +28,26 @@ const ClassList = () => {
     setTabelOpen(!tabelOpen);
   };
 
-  // const navigate = useNavigate();
-  // const data = {
-  //   name: name,
-  //   mentor: mentor,
-  //   start: start,
-  //   end: end,
-  // };
+  // handle input add user
+  const addName = (e: any) => {
+    setName(e);
+    console.log(name);
+  };
+
+  const addMentor = (e: any) => {
+    setMentor(e);
+    console.log(mentor);
+  };
+
+  const addStart = (e: any) => {
+    setStart(e);
+    console.log(start);
+  };
+
+  const addEnd = (e: any) => {
+    setEnd(e);
+    console.log(end);
+  };
 
   const token = cookies.token;
 
@@ -74,9 +87,6 @@ const ClassList = () => {
   const addNewClass = () => {
     axios
       .post("https://altaimmersive.site/classes", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         name: `${name}`,
         mentor: `${mentor}`,
         start_date: `${start}`,
@@ -84,6 +94,20 @@ const ClassList = () => {
       })
       .then((res) => {
         console.log(res.data);
+        axios
+          .get("https://altaimmersive.site/mentors", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            const { name } = response.data.data;
+            setDataMentor(response.data.data);
+            console.log(response.data.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       });
   };
 
@@ -176,7 +200,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -186,7 +210,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <select onChange={(e) => setMentor(e.target.value)} className="mb-3 select select-bordered w-full max-w-xs">
+                      <select value={mentor} onChange={addMentor} className="mb-3 select select-bordered w-full max-w-xs">
                         {dataMentor.map((data, index) => {
                           return (
                             <option key={index} value={data.name}>
@@ -204,7 +228,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={start} onChange={(e) => setStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -214,7 +238,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={end} onChange={(e) => setEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                 </table>

@@ -181,7 +181,7 @@ const UserList = () => {
                       <td>{item.status}</td>
                       {cookies.id == 1 ? (
                         <td className="flex gap-6">
-                          <span onClick={() => editUser(item.id)}>
+                          <span>
                             <AiFillEdit size={25} className="text-green-600" />
                           </span>
                           <span onClick={() => deleteUser(item.id)}>
