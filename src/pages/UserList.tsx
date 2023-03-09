@@ -13,39 +13,38 @@ import { useLocation } from "react-router-dom";
 import { Cookies, useCookies } from "react-cookie";
 
 const UserList = () => {
-  const [tabelOpen, setTabelOpen] = useState(false)
-  const location = useLocation()
-  const [cookies, setCookie] = useCookies<any>(['id', 'token'])
-  const [dataUser, setDataUser] = useState([])
+  const [tabelOpen, setTabelOpen] = useState(false);
+  const location = useLocation();
+  const [cookies, setCookie] = useCookies<any>(["id", "token"]);
+  const [dataUser, setDataUser] = useState([]);
 
   const handleTable = () => {
-    setTabelOpen(!tabelOpen)
-  }
+    setTabelOpen(!tabelOpen);
+  };
 
   const token = cookies.token;
 
   useEffect(() => {
-    axios.get('http://34.123.29.56:8000/users', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        setDataUser(response.data.data)
+    axios
+      .get("http://34.123.29.56:8000/users", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setDataUser(response.data.data);
         // console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle error
         console.error(error);
       });
-  }, [])
-  console.log(dataUser)
+  }, []);
+  console.log(dataUser);
 
   const deleteUser = () => {
-    axios.delete('http://34.123.29.56:8000/users',{
-      
-    })
-  }
+    axios.delete("http://34.123.29.56:8000/users", {});
+  };
 
   return (
     <div>
@@ -89,18 +88,20 @@ const UserList = () => {
                       <td>{item.team}</td>
                       <td>{item.role}</td>
                       <td>{item.status}</td>
-                      {cookies.id == 1 ?
+                      {cookies.id == 1 ? (
                         <td className="flex gap-6">
-                          <span >
-                            <AiFillEdit size={25} className='text-green-600' />
+                          <span>
+                            <AiFillEdit size={25} className="text-green-600" />
                           </span>
-                          <span onClick={deleteUser} >
-                            <AiFillDelete size={25} className='text-red-600' />
+                          <span onClick={deleteUser}>
+                            <AiFillDelete size={25} className="text-red-600" />
                           </span>
                         </td>
-                        : ''}
+                      ) : (
+                        ""
+                      )}
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>

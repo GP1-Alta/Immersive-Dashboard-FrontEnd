@@ -1,8 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { IoIosCloseCircle } from "react-icons/io";
 import { BiLogOut } from "react-icons/bi";
 
 import logo from "../assets/logo.png";
+
+import { SidebarContext } from "../utils/context";
 
 interface myProps {
   handledashboard?: React.MouseEventHandler;
@@ -15,6 +17,7 @@ interface myProps {
 }
 
 const SideBar: FC<myProps> = (props) => {
+  const { open, setOpen } = useContext(SidebarContext);
   const { handledashboard, handleMentee, handleUser, handleClass, closeSideBar, handleLogout, isActive } = props;
 
   return (
