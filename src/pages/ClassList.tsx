@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { BsBookFill, BsSearch } from "react-icons/bs";
@@ -7,13 +7,98 @@ import { GrNext, GrPrevious } from "react-icons/gr";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
+import axios from "axios";
+import { Cookies, useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+
+import { ClassType, MentorType } from "../utils/types/types";
 
 const ClassList = () => {
   const [tabelOpen, setTabelOpen] = useState(false);
+  const [cookies, setCookie] = useCookies<any>(["id", "token"]);
+  const [dataClass, setDataClass] = useState<ClassType[]>([]);
+  const [dataMentor, setDataMentor] = useState<MentorType[]>([]);
+  const [id, setId] = useState<number>();
+  const [name, setName] = useState<string>("");
+  const [mentor, setMentor] = useState<string>("");
+  const [start, setStart] = useState<string>("");
+  const [end, setEnd] = useState<string>("");
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
   };
+
+  // const navigate = useNavigate();
+  // const data = {
+  //   name: name,
+  //   mentor: mentor,
+  //   start: start,
+  //   end: end,
+  // };
+
+  const token = cookies.token;
+
+  function fetchData() {
+    axios
+      .get("https://altaimmersive.site/classes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setDataClass(response.data.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  function getMentor() {
+    axios
+      .get("https://altaimmersive.site/mentors", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { name } = response.data.data;
+        setDataMentor(response.data.data);
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const addNewClass = () => {
+    axios
+      .post("https://altaimmersive.site/classes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        name: `${name}`,
+        mentor: `${mentor}`,
+        start_date: `${start}`,
+        end_date: `${end}`,
+      })
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+
+  useEffect(() => {
+    getMentor();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const deleteClass = (id: any) => {
+    axios.delete(`https://altaimmersive.site/classes/${id}`, {});
+  };
+
   return (
     <div>
       {screen.width > 767 ? (
@@ -35,52 +120,32 @@ const ClassList = () => {
                   <th>No</th>
                   <th>Name</th>
                   <th>Mentor</th>
+                  <th>Start</th>
+                  <th>End</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {/* row 1 */}
-                <tr>
-                  <th>1</th>
-                  <td>Front End Engineer Batch 10</td>
-                  <td>Mas Bagas</td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
-                {/* row 2 */}
-                <tr>
-                  <th>1</th>
-                  <td>Front End Engineer Batch 10</td>
-                  <td>Mas Bagas</td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
-                {/* row 3 */}
-                <tr>
-                  <th>1</th>
-                  <td>Front End Engineer Batch 10</td>
-                  <td>Mas Bagas</td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
+                {dataClass.map((data, index) => {
+                  return (
+                    <tr key={index}>
+                      <th>{index}</th>
+                      <td>{data.name}</td>
+                      <td>{data.mentor}</td>
+                      <td>{data.start_date}</td>
+                      <td>{data.end_date}</td>
+                      <td className="flex gap-3">
+                        <a href="">
+                          <AiFillEdit size={25} />
+                        </a>
+                        <div onClick={() => deleteClass(data.id)}>
+                          <AiFillDelete size={25} />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -96,60 +161,68 @@ const ClassList = () => {
           <label htmlFor="my-modal-4" className="modal cursor-pointer">
             <label className="modal-box relative w-screen" htmlFor="">
               <h3 className="text-lg font-bold text-center mb-5">Add Class</h3>
-              <table className="w-full">
-                <tr>
-                  <td>
-                    <label className="label">
-                      <span className="label-text">Name</span>
+              <form>
+                <table className="w-full">
+                  <tr>
+                    <td>
+                      <label className="label">
+                        <span className="label-text">Nama</span>
+                      </label>
+                    </td>
+                    <td>
+                      <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label className="label">
+                        <span className="label-text">Mentor</span>
+                      </label>
+                    </td>
+                    <td>
+                      <select onChange={(e) => setMentor(e.target.value)} className="mb-3 select select-bordered w-full max-w-xs">
+                        {dataMentor.map((data, index) => {
+                          return (
+                            <option key={index} value={data.name}>
+                              {data.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label className="label">
+                        <span className="label-text">Mulai</span>
+                      </label>
+                    </td>
+                    <td>
+                      <input value={start} onChange={(e) => setStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label className="label">
+                        <span className="label-text">Akhir</span>
+                      </label>
+                    </td>
+                    <td>
+                      <input value={end} onChange={(e) => setEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                    </td>
+                  </tr>
+                </table>
+                <div className="grid justify-items-center w-full">
+                  <div className="flex w-full gap-5 justify-end">
+                    <label htmlFor="my-modal-4" className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">
+                      Cancel
                     </label>
-                  </td>
-                  <td>
-                    <input type="text" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label className="label">
-                      <span className="label-text">Mentor</span>
+                    <label htmlFor="my-modal-4" onClick={addNewClass} className="btn bg-[#19345E] w-20 flex gap-2">
+                      Save
                     </label>
-                  </td>
-                  <td>
-                    <select className="mb-3 select select-bordered w-full max-w-xs">
-                      <option disabled selected>
-                        Who shot first?
-                      </option>
-                      <option>Han Solo</option>
-                      <option>Greedo</option>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label className="label">
-                      <span className="label-text">Mulai</span>
-                    </label>
-                  </td>
-                  <td>
-                    <input type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <label className="label">
-                      <span className="label-text">Akhir</span>
-                    </label>
-                  </td>
-                  <td>
-                    <input type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
-                  </td>
-                </tr>
-              </table>
-              <div className="grid justify-items-center w-full">
-                <div className="flex w-full gap-5 justify-end">
-                  <button className="btn bg-white border-[#19345E] text-[#19345E] hover:bg-[#19345E] hover:text-white w-20 flex gap-2">Cancel</button>
-                  <button className="btn bg-[#19345E] w-20 flex gap-2">Save</button>
+                  </div>
                 </div>
-              </div>
+              </form>
             </label>
           </label>
         </Layout>

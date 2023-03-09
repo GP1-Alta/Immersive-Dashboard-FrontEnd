@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { Cookies, useCookies } from "react-cookie";
 
 const UserList = () => {
+
   const [tabelOpen, setTabelOpen] = useState(false)
   const location = useLocation()
   const [cookies, setCookie] = useCookies<any>(['id', 'token'])
@@ -55,9 +56,10 @@ const UserList = () => {
     console.log(newStatus)
   }
 
+
   const handleTable = () => {
-    setTabelOpen(!tabelOpen)
-  }
+    setTabelOpen(!tabelOpen);
+  };
 
   // add new user
   const addNewUser = () => {
@@ -99,10 +101,11 @@ const UserList = () => {
         setDataUser(response.data.data)
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle error
         console.error(error);
       });
+
   }, [page, search])
 
   // get user by search 
@@ -112,6 +115,7 @@ const UserList = () => {
 
   // delete user
   const deleteUser = (id: number) => {
+
     console.log(id)
     axios.delete(`https://virtserver.swaggerhub.com/KHARISMAJANUAR/api-immersive-dashboard/1.0.0/users/${id}`, {
       headers: {
@@ -177,18 +181,20 @@ const UserList = () => {
                       <td>{item.team}</td>
                       <td>{item.role}</td>
                       <td>{item.status}</td>
-                      {cookies.id == 1 ?
+                      {cookies.id == 1 ? (
                         <td className="flex gap-6">
-                          <span >
-                            <AiFillEdit size={25} className='text-green-600' />
+                          <span>
+                            <AiFillEdit size={25} className="text-green-600" />
                           </span>
-                          <span onClick={() => deleteUser(item.id)} >
-                            <AiFillDelete size={25} className='text-red-600' />
+                          <span onClick={() => deleteUser(item.id)}>
+                            <AiFillDelete size={25} className="text-red-600" />
                           </span>
                         </td>
-                        : ''}
+                      ) : (
+                        ""
+                      )}
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
