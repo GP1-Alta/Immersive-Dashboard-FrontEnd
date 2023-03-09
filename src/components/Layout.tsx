@@ -71,7 +71,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             isActive={isActive}
           />
         </div>
-        <div className="ml-[200px] w-full">
+        <div className={`${screen.width > 885 ? 'ml-[200px]' : '' }  w-full`}>
           <Header pageName={location?.state?.name ? location?.state?.name : "Dashboard"} openSideBar={() => openSideBar()} />
           {children}
         </div>

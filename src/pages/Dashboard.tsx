@@ -3,30 +3,17 @@ import InfoBox from "../components/InfoBox";
 import Layout from "../components/Layout";
 
 const Dashboard = () => {
-  const data = [
-    {
-      title: "Mentee",
-      number: 50,
-    },
-    {
-      title: "User",
-      number: 30,
-    },
-    {
-      title: "Class",
-      number: 10,
-    },
-  ];
+
   return (
-    <div>
-      <Layout>
-        <div className="flex gap-5 justify-center my-5">
-          {data.map((data:any, index:any) => (
-            <InfoBox key={index} title={data.title} number={data.number} />
-          ))}
-        </div>
-      </Layout>
-    </div>
+    <Layout>
+      {
+        screen.width > 767
+          ? <div>dekstop</div>
+          : <div>
+            <div className="w-full h-44 bg-blue ">header</div>
+          </div>
+      }
+    </Layout>
   );
 };
 
