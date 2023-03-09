@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 
 import { BsSearch, BsBookFill } from "react-icons/bs";
@@ -8,21 +8,81 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { Cookies, useCookies } from "react-cookie";
+
 
 const MenteeList = () => {
+  const navigate = useNavigate()
   const [tabelOpen, setTabelOpen] = useState(false);
+  const [cookies, setCookie] = useCookies<any>(['id', 'token'])
+  const [mentees, setMentees] = useState([])
+  const [classList, setClassList] = useState<any>([])
+  const [search, setSearch] = useState<any>([])
+  const [category, setCategory] = useState<any>([])
+  const [page, setPage] = useState<any>(1)
 
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
   };
+
+  const handleSearch = (e: any) => {
+    setSearch(e)
+  }
+
+  const arr: any = []
+  // get all class 
+  useEffect(() => {
+    axios.get('https://altaimmersive.site/classes/list', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => {
+        setClassList(res.data.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  console.log(classList)
+  const token = cookies.token;
+  // get all mentees 
+  useEffect(() => {
+    axios.get(`https://altaimmersive.site/mentees?name=${search}&page=${page}&category=${category}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((ress) => {
+        // console.log('mentee', ress.data.data)
+        setMentees(ress.data.data)
+
+      })
+  }, [search, category, page])
+
+  // update mentee
+  const updateMentee = (e: any) => {
+    console.log(e)
+    navigate('/AddMentee', {
+      state: {
+        id: e
+      }
+    })
+
+  }
+
+
+
+
+
 
   return (
     <div>
       {screen.width > 767 ? (
         <Layout>
           <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input type="text" placeholder="Type here" className="input w-full max-w-xs" />
+            <input onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-xs" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -32,9 +92,27 @@ const MenteeList = () => {
           </div>
           <div className="flex gap-3 justify-end mr-5 mt-5">
             <button className="btn bg-[#19345E]">Export</button>
+            <select>
+              {classList?.map((item: any, index: any) => {
+                // <select className="select w-50 max-w-xs">
+                //   <option disabled selected>
+                //     All Class
+                //   </option>
+                //   <option>{item?.name}</option>
+                // </select>
+                return (
+
+                  <option key={item.id} value='All Class'>
+                    {item.name}
+                  </option>
+
+                )
+              })}
+            </select>
+
             <select className="select w-50 max-w-xs">
               <option disabled selected>
-                Pick your favorite Simpson
+                All Status
               </option>
               <option>Homer</option>
               <option>Marge</option>
@@ -42,25 +120,12 @@ const MenteeList = () => {
               <option>Lisa</option>
               <option>Maggie</option>
             </select>
-            <select className="select w-50 max-w-xs">
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="select w-50 max-w-xs">
               <option disabled selected>
-                Pick your favorite Simpson
+                All Category
               </option>
-              <option>Homer</option>
-              <option>Marge</option>
-              <option>Bart</option>
-              <option>Lisa</option>
-              <option>Maggie</option>
-            </select>
-            <select className="select w-50 max-w-xs">
-              <option disabled selected>
-                Pick your favorite Simpson
-              </option>
-              <option>Homer</option>
-              <option>Marge</option>
-              <option>Bart</option>
-              <option>Lisa</option>
-              <option>Maggie</option>
+              <option value='Informatics'>Informatics</option>
+              <option value='Non-Informatics'>Non-Informatics</option>
             </select>
             <button className="btn bg-[#19345E]">Filter</button>
           </div>
@@ -81,73 +146,37 @@ const MenteeList = () => {
               </thead>
               <tbody>
                 {/* row 1 */}
-                <tr>
-                  <th>1</th>
-                  <td>Rachman Kamil</td>
-                  <td>BE 7</td>
-                  <td>Active</td>
-                  <td>IT</td>
-                  <td>Male</td>
-                  <td>
-                    <BsBookFill />
-                  </td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
-                {/* row 2 */}
-                <tr>
-                  <th>1</th>
-                  <td>Rachman Kamil</td>
-                  <td>BE 7</td>
-                  <td>Active</td>
-                  <td>IT</td>
-                  <td>Male</td>
-                  <td>
-                    <BsBookFill />
-                  </td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
-                {/* row 3 */}
-                <tr>
-                  <th>1</th>
-                  <td>Rachman Kamil</td>
-                  <td>BE 7</td>
-                  <td>Active</td>
-                  <td>IT</td>
-                  <td>Male</td>
-                  <td>
-                    <BsBookFill />
-                  </td>
-                  <td className="flex gap-3">
-                    <a href="">
-                      <AiFillEdit size={25} />
-                    </a>
-                    <a href="">
-                      <AiFillDelete size={25} />
-                    </a>
-                  </td>
-                </tr>
+                {mentees.map((item: any, index) => {
+                  return (
+                    <tr key={index}>
+                      <th>{item.id}</th>
+                      <td>{item.name}</td>
+                      <td>{item.class}</td>
+                      <td>{item.status}</td>
+                      <td>{item.category}</td>
+                      <td>{item.sex}</td>
+                      <td>
+                        <BsBookFill />
+                      </td>
+                      <td className="flex gap-3">
+                        <span className="text-green-600">
+                          <AiFillEdit size={25} onClick={() => updateMentee(item.id)} />
+                        </span>
+                        <a href="">
+                          <AiFillDelete size={25} />
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
           <div className="flex gap-10 justify-end mr-5">
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={page > 1 ? () => setPage(page - 1) : () => setPage(page)} className="btn bg-[#19345E] flex gap-2">
               <GrPrevious /> Prev
             </button>
-            <button className="btn bg-[#19345E] flex gap-2">
+            <button onClick={() => setPage(page + 1)} className="btn bg-[#19345E] flex gap-2">
               Next <GrNext />
             </button>
           </div>

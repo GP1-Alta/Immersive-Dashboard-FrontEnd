@@ -32,6 +32,42 @@ const Login = () => {
     // console.log(password)
   };
 
+    async function handleLogin(e:any) {
+        if (email && password !== '') {
+            axios.post("http://34.123.29.56/login", {
+                "email": `${email}`,
+                "password": `${password}`
+            })
+                .then((response) => {
+                    const { name } = response.data.data;
+                    const { id } = response.data.data;
+                    console.log(response.data.token)
+                    const token = response.data.token
+                    username = name
+                    idUser.push(id)
+                    console.log(id)
+                    setCookie('username', username, { path: "/" })
+                    setCookie('id', idUser, { path: "/" })
+                    setCookie('token', token, { path: "/" })
+                    navigate(`/Dashboard/${username}`, {
+                        state: {
+                            userId: idUser
+                        }
+                    })
+                    window.location.reload()
+                })
+                .catch((error) => {
+                    console.log(error);
+                    setAlert(true)
+                    const result = isAlert();
+                });
+        } else {
+            // jika username dan password kosong
+            setAlert(true)
+            const result = await isAlert();
+        }
+    }
+
   // alert arror login
   function isAlert() {
     return new Promise((resolve) => {
@@ -40,6 +76,7 @@ const Login = () => {
       }, 7000);
     });
   }
+
 
   async function handleLogin(e: any) {
     if (email && password !== "") {
