@@ -19,8 +19,11 @@ const MenteeList = () => {
   const [cookies, setCookie] = useCookies<any>(['id', 'token'])
   const [mentees, setMentees] = useState([])
   const [classList, setClassList] = useState<any>([])
+  const [statusList, setStatusList] = useState<any>([])
   const [search, setSearch] = useState<any>([])
   const [category, setCategory] = useState<any>([])
+  const [status, setStatus] = useState<any>([])
+  const [classes, setClasses] = useState<any>([])
   const [page, setPage] = useState<any>(1)
 
   const handleTable = () => {
@@ -45,37 +48,54 @@ const MenteeList = () => {
       .catch((err) => console.log(err))
   }, [])
 
-  console.log(classList)
+  // get all status 
+  useEffect(() => {
+    axios.get('https://altaimmersive.site/status', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => setStatusList(res.data.data))
+      .catch((err) => err)
+  }, [])
+
+  // delete mentee
+  const deleteMentee = (e: any, id: any) => {
+    console.log(id)
+    e.preventDefault()
+    axios.delete(`https://altaimmersive.site/mentees/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((res) => console.log(res.data))
+      .catch((err) => {
+        alert('error')
+      })
+  }
+
   const token = cookies.token;
   // get all mentees 
   useEffect(() => {
-    axios.get(`https://altaimmersive.site/mentees?name=${search}&page=${page}&category=${category}`, {
+    axios.get(`https://altaimmersive.site/mentees?name=${search}&page=${page}&category=${category}&status=${status}&class=${classes}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((ress) => {
-        // console.log('mentee', ress.data.data)
         setMentees(ress.data.data)
-
       })
-  }, [search, category, page])
+  }, [search, category, page, status, classes, deleteMentee])
 
   // update mentee
-  const updateMentee = (e: any) => {
-    console.log(e)
+  const updateMentee = (id: any) => {
+    console.log(id)
     navigate('/AddMentee', {
       state: {
-        id: e
+        id: id
       }
     })
-
   }
-
-
-
-
-
 
   return (
     <div>
@@ -91,43 +111,42 @@ const MenteeList = () => {
             </Link>
           </div>
           <div className="flex gap-3 justify-end mr-5 mt-5">
-            <button className="btn bg-[#19345E]">Export</button>
-            <select>
-              {classList?.map((item: any, index: any) => {
-                // <select className="select w-50 max-w-xs">
-                //   <option disabled selected>
-                //     All Class
-                //   </option>
-                //   <option>{item?.name}</option>
-                // </select>
-                return (
 
-                  <option key={item.id} value='All Class'>
+            {/* filter bt class */}
+            <select value={classes} onChange={(e) => setClasses(e.target.value)}>
+              <option value='' selected>
+                All Class
+              </option>
+              {classList?.map((item: any, index: any) => {
+                return (
+                  <option key={item.id} value={item.name}>
                     {item.name}
                   </option>
-
                 )
               })}
             </select>
 
-            <select className="select w-50 max-w-xs">
-              <option disabled selected>
+            {/* filter by status */}
+            <select value={status} onChange={(e) => setStatus(e.target.value)} className="select w-50 max-w-xs">
+              <option value='' selected>
                 All Status
               </option>
-              <option>Homer</option>
-              <option>Marge</option>
-              <option>Bart</option>
-              <option>Lisa</option>
-              <option>Maggie</option>
+              {statusList?.map((item: any, index: any) => {
+                return (
+                  <option key={item.id} value={item.name}>{item.name}</option>
+                )
+              })}
             </select>
+
+            {/* filter by category */}
             <select value={category} onChange={(e) => setCategory(e.target.value)} className="select w-50 max-w-xs">
-              <option disabled selected>
+              <option value='' selected>
                 All Category
               </option>
               <option value='Informatics'>Informatics</option>
               <option value='Non-Informatics'>Non-Informatics</option>
             </select>
-            <button className="btn bg-[#19345E]">Filter</button>
+
           </div>
           <div className="overflow-x-auto mx-5 my-10">
             <table className="table w-full">
@@ -146,10 +165,10 @@ const MenteeList = () => {
               </thead>
               <tbody>
                 {/* row 1 */}
-                {mentees.map((item: any, index) => {
+                {mentees?.map((item: any, index) => {
                   return (
                     <tr key={index}>
-                      <th>{item.id}</th>
+                      <th>{index + 1}</th>
                       <td>{item.name}</td>
                       <td>{item.class}</td>
                       <td>{item.status}</td>
@@ -163,7 +182,7 @@ const MenteeList = () => {
                           <AiFillEdit size={25} onClick={() => updateMentee(item.id)} />
                         </span>
                         <a href="">
-                          <AiFillDelete size={25} />
+                          <AiFillDelete className="text-red-600" size={25} onClick={(e) => deleteMentee(e, item.id)} />
                         </a>
                       </td>
                     </tr>
