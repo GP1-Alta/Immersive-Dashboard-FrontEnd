@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import AddMentee from "../pages/AddMentee";
 
 import { SidebarContext } from "../utils/context";
+import MenteeLog from "../pages/MenteeLog";
 
 const App = () => {
   const [cookies, setCookie] = useCookies<any>(["username"]);
@@ -32,6 +33,7 @@ const App = () => {
             <Route path={`/Dashboard/${dataUser}`} element={<Dashboard />} />
             <Route path={`/Menteelist/${dataUser}`} element={<MenteeList />} />
             <Route path={`/AddMentee/`} element={<AddMentee />} />
+            <Route path={`/MenteeLog/${dataUser}/:id_user`} element={<MenteeLog />} />
             <Route path={`/Userlist/${dataUser}`} element={<UserList />} />
             <Route path={`/Classlist/${dataUser}`} element={<ClassList />} />
           </Routes>

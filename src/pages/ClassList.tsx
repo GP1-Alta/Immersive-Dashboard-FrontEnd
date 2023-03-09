@@ -32,6 +32,7 @@ const ClassList = () => {
     setTabelOpen(!tabelOpen);
   };
 
+
   const token = cookies.token;
 
   const headers = {
@@ -106,6 +107,7 @@ const ClassList = () => {
 
   // delete class
   const deleteClass = (id: any) => {
+
     axios.delete(`https://altaimmersive.site/classes/${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -192,7 +194,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addName(e.target.value)} type="text" placeholder="Nama Kelas" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -202,6 +204,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
+
                       <select value={mentor} onChange={(e) => setMentor(e.target.value)} className="mb-3 select select-bordered w-full max-w-xs">
                         {dataMentor?.map((data, index) => {
                           return (
@@ -220,7 +223,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={start} onChange={(e) => setStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addStart(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                   <tr>
@@ -230,7 +233,7 @@ const ClassList = () => {
                       </label>
                     </td>
                     <td>
-                      <input value={end} onChange={(e) => setEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
+                      <input onChange={(e) => addEnd(e.target.value)} type="date" placeholder="Type here" className="mb-3 input input-bordered w-full max-w-xs" />
                     </td>
                   </tr>
                 </table>

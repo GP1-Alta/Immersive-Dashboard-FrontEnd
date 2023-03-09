@@ -9,10 +9,11 @@ import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
 import axios from "axios";
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Cookies, useCookies } from "react-cookie";
 
 const UserList = () => {
+
 
   const [tabelOpen, setTabelOpen] = useState(false)
   const location = useLocation()
@@ -46,13 +47,13 @@ const UserList = () => {
     setNewStatus(e.target.value)
   }
 
-
   const handleTable = () => {
     setTabelOpen(!tabelOpen);
   };
 
   // add new user
   const addNewUser = () => {
+
     axios.post('https://altaimmersive.site/register', {
       "name": `${newName}`,
       "email": `${newEmail}`,
@@ -99,6 +100,7 @@ const UserList = () => {
   const token = cookies.token;
   // get all user
   useEffect(() => {
+
     axios.get(`http://34.123.29.56/users?page=${page}&key=${search}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -110,12 +112,14 @@ const UserList = () => {
       .catch((error) => {
         console.error(error);
       });
+
   }, [page, search, deleteUser])
 
   // get user by search 
   const handleSearch = (e: any) => {
-    setSearch(e)
-  }
+    setSearch(e);
+  };
+
 
   // update user by id
   const updateUser = (id: any) => {
@@ -130,8 +134,14 @@ const UserList = () => {
         setNewEmail(res.data.data.email)
         setNewTeam(res.data.data.team)
         setNewStatus(res.data.data.status)
+
       })
-  }
+      .then((response) => {
+        console.log(response.data);
+        alert(`success delete user id ${id}`);
+      });
+  };
+
 
   const saveUpdate = () => {
     axios.put(`https://altaimmersive.site/users/${idUser}`, {
@@ -283,6 +293,7 @@ const UserList = () => {
                 <tr>
                   <td>
                     <label className="label">
+
                       <span className="label-text">Status</span>
                     </label>
                   </td>
