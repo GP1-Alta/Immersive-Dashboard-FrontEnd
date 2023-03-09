@@ -97,8 +97,8 @@ const MenteeList = () => {
 
   // update mentee
   const updateMentee = (id: any) => {
-    console.log(id);
-    navigate("/AddMentee", {
+
+    navigate('/AddMentee', {
       state: {
         id: id,
       },
