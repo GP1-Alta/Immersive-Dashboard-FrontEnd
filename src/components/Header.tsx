@@ -17,7 +17,7 @@ const Header: FC<myPrps> = ({pageName, openSideBar}) => {
   },[])
 
   return (
-      <div className={` flex justify-between items-center w-full h-[60px] bg-[#F5F5F5] text-xl px-5  `}>
+      <div className={`${screen.width > 767 ? '' : 'fixed'} z-50 flex justify-between items-center w-full h-[60px] bg-[#F5F5F5] text-xl px-5  `}>
         {screen.width < 885 ? <GoThreeBars onClick={openSideBar} /> : ''}
         <h1 className="text-center">{pageName}</h1>
         <p className="text-right">Hello, {username}</p>

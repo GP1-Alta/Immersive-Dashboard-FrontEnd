@@ -23,6 +23,7 @@ const AddMentee = () => {
   const [getStatus, setGetStatus] = useState([])
   const [getClass, setGetClass] = useState([])
   const [updateMentee, setUpdateMentee] = useState<any>([])
+  const [isChange, setIsChange] = useState(false)
 
 
   const [urgentName, setUrgentName] = useState('')
@@ -34,12 +35,22 @@ const AddMentee = () => {
   const [newInstitution, setnewInstitution] = useState('')
 
 
+
+  function isAlert() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        setIsChange(false)
+      }, 5000);
+    });
+  }
+
+
   const token = cookies.token;
   const headers = {
     'Authorization': `Bearer ${token}`,
   };
   // add new mentee
-  const addNewMentee = (e: any) => {
+  async function addNewMentee (e: any) {
     e.preventDefault()
     axios.post('https://altaimmersive.site/mentees', {
       "name": `${newName}`,
@@ -60,7 +71,12 @@ const AddMentee = () => {
       "institution": `${newInstitution}`
     }, { headers })
       .then((res) => {
-        navigate(`/Menteelist/${cookies.username}`)
+        setIsChange(true)
+        navigate(`/Menteelist/${cookies.username}`,{
+          state: {
+            change : isChange
+          }
+        })
       })
       .catch((err) => {
         err
@@ -127,7 +143,10 @@ const AddMentee = () => {
   }
 
   // post update mentee
-  const putMentee = (e: any) => {
+  async function putMentee (e: any) {
+    console.log(urgentName)
+    console.log(urgentStatus)
+    console.log(newName)
     e.preventDefault()
     axios.put(`https://altaimmersive.site/mentees/${idMentee}`, {
       "name": `${newName}`,
@@ -148,11 +167,15 @@ const AddMentee = () => {
       "institution": `${newInstitution}`
     }, { headers })
       .then((res) => {
-        navigate(`/Menteelist/${cookies.username}`)
+        setIsChange(true)
+        navigate(`/Menteelist/${cookies.username}`,{
+          state: {
+            change : isChange
+          }
+        })
       })
       .catch((err) => {
         err
-        alert('hasrus terisi semua nya')
       })
   }
 
@@ -209,7 +232,7 @@ const AddMentee = () => {
                     <span className="label-text">Gender</span>
                   </label>
                 </td>
-                <td>
+                <td className="flex flex-row gap-5 items-center]">
                   <input onChange={(e) => setNewGender(e.target.value)} checked={newGender == 'Male'} value={`${idMentee ? newGender : 'Male'}`} type="radio" name="radio-1" className="radio" required /> Male
                   <input onChange={(e) => setNewGender(e.target.value)} checked={newGender == 'Female'} value={`${idMentee ? newGender : 'Female'}`} type="radio" name="radio-1" className="radio" required /> Female
                 </td>
@@ -286,8 +309,8 @@ const AddMentee = () => {
             </table>
             <h1>Emergency Data</h1>
             <table className="w-full">
-              <tr>
-                <td>
+              <tr >
+                <td className="w-[200px]">
                   <label className="label">
                     <span className="label-text">Name</span>
                   </label>
@@ -333,7 +356,7 @@ const AddMentee = () => {
                     <span className="label-text">Category</span>
                   </label>
                 </td>
-                <td>
+                <td className="flex flex-row gap-5 items-center]">
                   <input onChange={(e) => setnewCategory(e.target.value)} checked={newCategory == 'Informatics'} value={`${idMentee ? newCategory : 'Informatics'}`} type="radio" name="radio-2" className="radio" required /> Informatics
                   <input onChange={(e) => setnewCategory(e.target.value)} checked={newCategory == 'Non-Informatics'} value={`${idMentee ? newCategory : 'Non-Informatics'}`} type="radio" name="radio-2" className="radio" required /> Non-Informatics
                 </td>

@@ -92,7 +92,7 @@ const UserList = () => {
         'Authorization': `Bearer ${token}`
       }
     })
-      .then(response => { 
+      .then(response => {
         response
       })
   }
@@ -100,7 +100,6 @@ const UserList = () => {
   const token = cookies.token;
   // get all user
   useEffect(() => {
-
     axios.get(`http://34.123.29.56/users?page=${page}&key=${search}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -165,8 +164,8 @@ const UserList = () => {
     <div>
       {screen.width > 767 ? (
         <Layout>
-          <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input type="text" onChange={(e) => handleSearch(e.target.value)} placeholder="Type here" className="input w-full max-w-xs" />
+          <div className="flex items-center justify-end mr-5 mt-12 gap-5">
+            <input type="text" onChange={(e) => handleSearch(e.target.value)} placeholder="Type here" className="input w-full max-w-[150px]" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -197,7 +196,7 @@ const UserList = () => {
                 {dataUser.map((item: any, index: number) => {
                   return (
                     <tr key={index}>
-                      <th>{item.id}</th>
+                      <th>{index + 1}</th>
                       <td>{item.name}</td>
                       <td>{item.email}</td>
                       <td>{item.team}</td>
@@ -206,10 +205,10 @@ const UserList = () => {
                       {cookies.id == 1 ? (
                         <td className="flex gap-6">
                           <label htmlFor="my-modal-4">
-                            <AiFillEdit size={25} onClick={() => updateUser(item.id)} className="text-green-600" />
+                            <AiFillEdit size={25} onClick={() => updateUser(item.id)} className="text-green-600 cursor-pointer" />
                           </label>
                           <span onClick={() => deleteUser(item.id)}>
-                            <AiFillDelete size={25} className="text-red-600" />
+                            <AiFillDelete size={25} className="text-red-600 cursor-pointer" />
                           </span>
                         </td>
                       ) : (
@@ -222,7 +221,7 @@ const UserList = () => {
             </table>
           </div>
           <div className="flex gap-10 justify-end mr-5">
-            <button onClick={page > 1 ? () => setPage(page -1) : () => setPage(page) } className="btn bg-[#19345E] flex gap-2">
+            <button onClick={page > 1 ? () => setPage(page - 1) : () => setPage(page)} className="btn bg-[#19345E] flex gap-2">
               <GrPrevious /> Prev
             </button>
             <button onClick={() => setPage(page + 1)} className="btn bg-[#19345E] flex gap-2">
@@ -319,83 +318,52 @@ const UserList = () => {
         </Layout>
       ) : (
         <Layout>
-          <div className="flex items-center mr-5 px-3 mt-12 gap-5">
-            {cookies.id == 1 ? <button className="w-24 h-8 text-white text-sm rounded-md bg-orange">Add New</button> : ""}
+          <div className="mt-12">
+            <div className="flex items-center mr-5 px-3 mt-24  gap-5">
+              {cookies.id == 1 ? <button className="w-24 h-8 text-white text-sm rounded-md bg-orange">Add New</button> : ""}
 
-            <div className="flex flex-row justify-center items-center gap-2 border-black border-2 px-3 py-2 rounded-lg ">
-              <input type="text" placeholder="Type here" className="bg-transparent outline-none w-32 max-w-xs" />
-              <BsSearch size={20} />
+              <div className="flex flex-row justify-center items-center gap-2 border-black border-2 px-3 py-2 rounded-lg ">
+                <input type="text" placeholder="Type here" className="bg-transparent outline-none w-32 max-w-xs" />
+                <BsSearch size={20} />
+              </div>
             </div>
-          </div>
-          <div className="mt-8">
-            <table className={`${tabelOpen ? "h-fit" : "h-12"} w-full duration-300 relative overflow-hidden border-t border-black py-2 flex flex-col gap-3 `}>
-              <IoIosArrowDropdownCircle onClick={handleTable} className="absolute ml-4 text-2xl text-orange" />
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Fullname</td>
-                <td className="w-1/2"></td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Email</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Team</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Role</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Gender</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Status</td>
-                <td className="w-1/2 text-lg text-blue">Active</td>
-              </tr>
-              {cookies.id == 1 ? (
-                <div className="flex justify-end px-5 text-2xl gap-4">
-                  <FiEdit className="text-green-800" /> <MdDeleteForever className="text-red-500" />
-                </div>
-              ) : (
-                ""
-              )}
-            </table>
-            <table className={`${tabelOpen ? "h-fit" : "h-12"} w-full duration-300 relative overflow-hidden border-t border-black py-2 flex flex-col gap-3 `}>
-              <IoIosArrowDropdownCircle onClick={handleTable} className="absolute ml-4 text-2xl text-orange" />
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Fullname</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Email</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Team</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Role</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Gender</td>
-                <td className="w-1/2">arbi kustia</td>
-              </tr>
-              <tr className="w-full pl-16">
-                <td className="w-80 text-start  ">Status</td>
-                <td className="w-1/2 text-lg text-blue">Active</td>
-              </tr>
-              {cookies.id == 1 ? (
-                <div className="flex justify-end px-5 text-2xl gap-4">
-                  <FiEdit className="text-green-800" /> <MdDeleteForever className="text-red-500" />
-                </div>
-              ) : (
-                ""
-              )}
-            </table>
+            <div className="mt-12">
+              <table className={`${tabelOpen ? "h-fit" : "h-12"} w-full duration-300 relative overflow-hidden border-t border-black py-2 flex flex-col gap-3 `}>
+                <IoIosArrowDropdownCircle onClick={handleTable} className="absolute ml-4 text-2xl text-orange" />
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Fullname</td>
+                  <td className="w-1/2">arbi</td>
+                </tr>
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Email</td>
+                  <td className="w-1/2">arbi kustia</td>
+                </tr>
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Team</td>
+                  <td className="w-1/2">arbi kustia</td>
+                </tr>
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Role</td>
+                  <td className="w-1/2">arbi kustia</td>
+                </tr>
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Gender</td>
+                  <td className="w-1/2">arbi kustia</td>
+                </tr>
+                <tr className="w-full pl-16">
+                  <td className="w-80 text-start  ">Status</td>
+                  <td className="w-1/2 text-lg text-blue">Active</td>
+                </tr>
+                {cookies.id == 1 ? (
+                  <div className="flex justify-end px-5 text-2xl gap-4">
+                    <FiEdit className="text-green-800" /> <MdDeleteForever className="text-red-500" />
+                  </div>
+                ) : (
+                  ""
+                )}
+              </table>
+              
+            </div>
           </div>
         </Layout>
       )}

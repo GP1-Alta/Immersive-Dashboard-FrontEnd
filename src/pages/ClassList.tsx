@@ -130,8 +130,8 @@ const ClassList = () => {
     <div>
       {screen.width > 767 ? (
         <Layout>
-          <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-xs" />
+          <div className="flex items-center justify-end mr-5 mt-12 gap-5">
+            <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-[150px]" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -164,9 +164,9 @@ const ClassList = () => {
                       <td>{data.end_date}</td>
                       <td className="flex gap-3">
                         <label htmlFor="my-modal-4" onClick={(id) => updateClass(data.id)}>
-                          <AiFillEdit size={25} />
+                          <AiFillEdit size={25} className='text-green-600 cursor-pointer' />
                         </label>
-                        <div onClick={(id) => deleteClass(data.id)}>
+                        <div onClick={(id) => deleteClass(data.id)} className='text-red-600 cursor-pointer'>
                           <AiFillDelete size={25} />
                         </div>
                       </td>
@@ -262,7 +262,7 @@ const ClassList = () => {
         </Layout>
       ) : (
         <Layout>
-          <div className="flex items-center mr-5 px-3 mt-12 gap-5">
+          <div className="flex items-center mr-5 px-3 mt-24 gap-5">
             <button className="w-24 h-8 text-white text-sm rounded-md bg-orange">Add New</button>
             <div className="flex flex-row justify-center items-center gap-2 border-black border-2 px-3 py-2 rounded-lg ">
               <input type="text" placeholder="Type here" className="bg-transparent outline-none w-32 max-w-xs" />
