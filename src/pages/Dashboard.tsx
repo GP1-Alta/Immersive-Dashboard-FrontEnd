@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InfoBox from "../components/InfoBox";
 import Layout from "../components/Layout";
 import dashboard from '../assets/dashboard.png'
-import Calendar from 'react-calendar'
+// import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css';
 import {HiOutlineMinus } from 'react-icons/hi'
 
@@ -48,7 +48,7 @@ const Dashboard = () => {
           : <div className="">
             <div className="w-full h-screen fixed mt-[60px] px-4 flex justify-center ">
               <div className="  w-full h-fit mt-5 px-5 py-5 rounded-lg" >
-                <Calendar onChange={onChange} value={value} />
+                {/* <Calendar onChange={onChange} value={value} /> */}
               </div>
             </div>
             <div className="w-full px-3 absolute items-center pt-12 flex flex-col gap-4 h-fit mt-[480px] bg-gray-100 rounded-t-lg">
