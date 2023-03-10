@@ -32,7 +32,7 @@ const Login = () => {
 
     async function handleLogin(e:any) {
         if (email && password !== '') {
-            axios.post("http://34.123.29.56/login", {
+            axios.post("https://altaimmersive.site/login ", {
                 "email": `${email}`,
                 "password": `${password}`
             })

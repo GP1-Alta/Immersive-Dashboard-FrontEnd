@@ -100,7 +100,7 @@ const UserList = () => {
   const token = cookies.token;
   // get all user
   useEffect(() => {
-    axios.get(`http://34.123.29.56/users?page=${page}&key=${search}`, {
+    axios.get(`https://altaimmersive.site/users?page=${page}&key=${search}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
