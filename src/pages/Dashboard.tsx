@@ -27,21 +27,21 @@ const Dashboard = () => {
                   <h1 className="text-xl font-bold">Mentee Active</h1>
                   <p>70% Mentee Active</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 70 }}>70%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 70 }}>70%</div> */}
               </div>
               <div className="w-80 h-44 rounded-2xl flex flex-row py-8 items-center  justify-around bg-gray-100 ">
                 <div className="w-1/2 h-full flex flex-col gap-5 ">
                   <h1 className="text-lg font-bold">Mentee Placement</h1>
                   <p>90% Mentee Placement</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 90 }}>90%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 90 }}>90%</div> */}
               </div>
               <div className="w-80 h-44 rounded-2xl flex flex-row py-8 items-center  justify-around bg-gray-100 ">
                 <div className="w-1/2 h-full flex flex-col gap-5 ">
                   <h1 className="text-lg font-bold">Mentee Feedback</h1>
                   <p>40% Mentee Feedback</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 40 }}>40%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 40 }}>40%</div> */}
               </div>
             </div>
           </div>
@@ -58,21 +58,21 @@ const Dashboard = () => {
                   <h1 className='font-bold mb-8'>Mentee Active </h1>
                   <p>70% Mentee Active</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 70 }}>70%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 70 }}>70%</div> */}
               </div>
               <div className="w-full h-44 rounded-lg flex flex-row items-center justify-around bg-gray-200">
                 <div className="w-1/2 h-full py-5">
                   <h1 className='font-bold mb-8'>Mentee Placement </h1>
                   <p>90% Mentee Placement</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 90 }}>90%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": 90 }}>90%</div> */}
               </div>
               <div className="w-full h-44 rounded-lg flex flex-row items-center justify-around bg-gray-200">
                 <div className="w-1/2 h-full py-5">
                   <h1 className='font-bold mb-8'>Mentee Feedback </h1>
                   <p>40% Mentee Feedback</p>
                 </div>
-                <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": '40' }}>40%</div>
+                {/* <div className="radial-progress bg-blue text-primary-content border-4 border-blue" style={{ "--value": '40' }}>40%</div> */}
               </div>
             </div>
           </div>
