@@ -21,7 +21,7 @@ const SideBar: FC<myProps> = (props) => {
   const { handledashboard, handleMentee, handleUser, handleClass, closeSideBar, handleLogout, isActive } = props;
 
   return (
-    <div className={`h-screen w-[200px] bg-[#19345e] duration-500 fixed ${screen.width < 885 ? "absolute -translate-x-full z-20 " : ""} ${isActive ? "translate-x-0" : ""}  `}>
+    <div className={`h-full w-[200px] bg-[#19345e] duration-500 z-[90] fixed ${screen.width < 885 ? "absolute -translate-x-full z-20 " : ""} ${isActive ? "translate-x-0" : ""}  `}>
       {screen.width < 885 ? <IoIosCloseCircle onClick={closeSideBar} className={`ml-20 text-orange text-5xl `} /> : ""}
       <div className="flex justify-center">
         <img src={logo} className="my-5 w-24" alt="logo" width={150} />

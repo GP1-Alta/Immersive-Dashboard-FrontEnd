@@ -8,12 +8,13 @@ import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { MdDeleteForever } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 import { BsFillJournalBookmarkFill } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Cookies, useCookies } from "react-cookie";
 
 const MenteeList = () => {
   const navigate = useNavigate();
+  const location = useLocation()
   const [tabelOpen, setTabelOpen] = useState(false);
   const [cookies, setCookie] = useCookies<any>(["id", "token", "username"]);
   const [mentees, setMentees] = useState([]);
@@ -25,6 +26,18 @@ const MenteeList = () => {
   const [classes, setClasses] = useState<any>([]);
   const [page, setPage] = useState<any>(1);
   const [dataUser, setDataUser] = useState<any>("");
+  const [isDeleted, setIsDeleted] = useState(false)
+
+
+
+  useEffect(() => {
+    async function change () {
+      
+      setIsDeleted(location?.state?.change)
+      const result = await isAlert();
+    }
+    change()
+  },[location?.state?.change])
 
   useEffect(() => {
     setDataUser(cookies.username);
@@ -65,9 +78,10 @@ const MenteeList = () => {
       .catch((err) => err);
   }, []);
 
+
+
   // delete mentee
-  const deleteMentee = (e: any, id: any) => {
-    console.log(id);
+  async function deleteMentee(e: any, id: any) {
     e.preventDefault();
     axios
       .delete(`https://altaimmersive.site/mentees/${id}`, {
@@ -75,11 +89,24 @@ const MenteeList = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res) => console.log(res.data))
+      .then(async (res) => {
+        console.log(res.data)
+        setIsDeleted(true)
+        const result = await isAlert();
+      })
       .catch((err) => {
         alert("error");
       });
   };
+
+
+  function isAlert() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        setIsDeleted(false)
+      }, 5000);
+    });
+  }
 
   const token = cookies.token;
   // get all mentees
@@ -97,7 +124,6 @@ const MenteeList = () => {
 
   // update mentee
   const updateMentee = (id: any) => {
-
     navigate('/AddMentee', {
       state: {
         id: id,
@@ -112,10 +138,18 @@ const MenteeList = () => {
 
   return (
     <div>
+      {/* deleted success */}
+      {isDeleted ?
+        <div className="alert alert-success shadow-lg absolute z-[100]">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>changes have been saved!</span>
+          </div>
+        </div> : ''}
       {screen.width > 767 ? (
         <Layout>
-          <div className="flex items-center justify-end mr-5 mt-20 gap-5">
-            <input onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-xs" />
+          <div className="flex items-center justify-end mr-5 mt-12 gap-5">
+            <input onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Type here" className="input w-full max-w-[150px]" />
             <a>
               <BsSearch size={28} />
             </a>
@@ -125,8 +159,8 @@ const MenteeList = () => {
           </div>
           <div className="flex gap-3 justify-end mr-5 mt-5">
             {/* filter bt class */}
-            <select value={classes} onChange={(e) => setClasses(e.target.value)}>
-              <option value="" selected>
+            <select value={classes} onChange={(e) => setClasses(e.target.value)} className="select w-50 max-w-xs" >
+              <option value="" selected className="bg-gray-200 outline-none">
                 All Class
               </option>
               {classList?.map((item: any, index: any) => {
@@ -140,7 +174,7 @@ const MenteeList = () => {
 
             {/* filter by status */}
             <select value={status} onChange={(e) => setStatus(e.target.value)} className="select w-50 max-w-xs">
-              <option value="" selected>
+              <option value="" selected className="outline-none">
                 All Status
               </option>
               {statusList?.map((item: any, index: any) => {
@@ -188,14 +222,14 @@ const MenteeList = () => {
                       <td>{item.category}</td>
                       <td>{item.sex}</td>
                       <td>
-                        <BsBookFill size={25} onClick={() => detailMentee(item.id)} />
+                        <BsBookFill size={25} onClick={() => detailMentee(item.id)} className='cursor-pointer' />
                       </td>
                       <td className="flex gap-3">
-                        <span className="text-green-600">
+                        <span className="text-green-600 cursor-pointer">
                           <AiFillEdit size={25} onClick={() => updateMentee(item.id)} />
                         </span>
                         <a href="">
-                          <AiFillDelete className="text-red-600" size={25} onClick={(e) => deleteMentee(e, item.id)} />
+                          <AiFillDelete className="text-red-600 cursor-pointer" size={25} onClick={(e) => deleteMentee(e, item.id)} />
                         </a>
                       </td>
                     </tr>
@@ -215,7 +249,7 @@ const MenteeList = () => {
         </Layout>
       ) : (
         <Layout>
-          <div className="px-3">
+          <div className="px-3 pt-12">
             <div className="flex items-center mr-5 mt-12 gap-5">
               <button className="w-24 h-8 text-white text-sm rounded-md bg-orange">Add New</button>
               <div className="flex flex-row justify-center items-center gap-2 border-black border-2 px-3 py-2 rounded-lg ">
